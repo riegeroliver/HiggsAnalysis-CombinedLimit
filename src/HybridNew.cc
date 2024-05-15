@@ -9,6 +9,7 @@
 #include "../interface/CascadeMinimizer.h" // must be early
 #include <TFile.h>
 #include <TF1.h>
+#include <TTree.h>
 #include <TKey.h>
 #include <TLine.h>
 #include <TCanvas.h>
