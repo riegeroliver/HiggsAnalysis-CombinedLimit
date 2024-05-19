@@ -15,71 +15,47 @@
 #include "RooFormulaVar.h"
 #include "RooLinkedList.h"
 #include "RooConstVar.h"
-
-
 #include "RooListProxy.h"
 
 #include <iostream>
 #include <vector>
 
-
 using namespace std;
 
 class RooMultiPdf : public RooAbsPdf {
 public:
-  enum PenatlyScheme{PVAL, AIC};
-  RooMultiPdf() {} ;
-  RooMultiPdf(const char *name, const char *title, RooCategory &, const RooArgList& _c);
-  RooMultiPdf(const RooMultiPdf& other, const char* name=0);
-  virtual TObject* clone(const char* newname) const { return new RooMultiPdf(*this,newname); }
-  inline virtual ~RooMultiPdf() { }
+  enum PenaltyScheme { PVAL, AIC };
 
-/*
-  RooAbsReal* createNLL(RooAbsData& data, const RooCmdArg& arg1=RooCmdArg::none(),  const RooCmdArg& arg2=RooCmdArg::none(),  
-                                const RooCmdArg& arg3=RooCmdArg::none(),
-const RooCmdArg& arg4=RooCmdArg::none(), const RooCmdArg&
-arg5=RooCmdArg::none(),  
-                                 const RooCmdArg& arg6=RooCmdArg::none(),
-const RooCmdArg& arg7=RooCmdArg::none(), const RooCmdArg&
-arg8=RooCmdArg::none());
+  RooMultiPdf(const char *name, const char *title, RooCategory &, const RooArgList &_c);
+  RooMultiPdf(const RooMultiPdf &other, const char *name = 0);
+  virtual TObject *clone(const char *newname) const { return new RooMultiPdf(*this, newname); }
+  inline virtual ~RooMultiPdf() {}
 
-  RooAbsReal* createNLL(RooAbsData &data,const RooLinkedList&);
-*/
-
-//}
-/*
-  Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const ;
-  Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const ;
-*/
   bool checkIndexDirty() const;
   double getCorrection() const;
   RooAbsPdf *getCurrentPdf() const;
-  int getNumPdfs() const {return nPdfs;};
-  void setCorrectionFactor(PenatlyScheme penal);
+  int getNumPdfs() const { return nPdfs; }
+  void setCorrectionFactor(PenaltyScheme penal);
   void setCorrectionFactor(double penal);
-  int getCurrentIndex() const ;
-  RooAbsPdf *getPdf(int index) const ;
-  virtual Double_t getValV(const RooArgSet* nset) const ;
-  /// needed since otherwise printValue calls evaluate(), which is taboo
-  virtual void printValue(ostream& os) const { getCurrentPdf()->printValue(os); }
+  int getCurrentIndex() const;
+  RooAbsPdf *getPdf(int index) const;
+  virtual Double_t getValV(const RooArgSet *nset) const;
+  virtual void printValue(ostream &os) const { getCurrentPdf()->printValue(os); }
+
 protected:
   RooListProxy c;
   RooListProxy corr;
   RooCategoryProxy x;
-  //RooFormulaVar *cval;
- // RooRealProxy nllcorr;
-//  RooAbsCatgeory *fIndex_r;
 
-  int fIndex; // sigh, there should be a better way than this
+  int fIndex;
   int nPdfs;
   mutable Int_t _oldIndex;
 
   Double_t evaluate() const;
   Double_t getLogVal(const RooArgSet *set = 0) const;
-  //std::string createCorrectionString();	// should only do this once really
   double cFactor;
 
 private:
-  ClassDef(RooMultiPdf,1) // Multi PDF
+  ClassDef(RooMultiPdf, 1) // Multi PDF
 };
 #endif
