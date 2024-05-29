@@ -1,0 +1,19 @@
+<!ELEMENT Histogram (Data+)>
+<!ATTLIST Histogram
+          Version           CDATA            #IMPLIED
+	  >
+
+<!ELEMENT Data (Bin+)>
+<!ATTLIST Data
+          Name              CDATA            #REQUIRED
+	  Min               CDATA            #REQUIRED
+	  Max               CDATA            #REQUIRED
+	  BinWidth          CDATA            #REQUIRED
+	  > 
+
+<!ELEMENT Bin EMPTY>
+<!ATTLIST Bin
+          X                 CDATA            #REQUIRED
+          Y                 CDATA            #REQUIRED
+	  > 
+

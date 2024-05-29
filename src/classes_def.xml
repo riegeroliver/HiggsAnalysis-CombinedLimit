@@ -122,6 +122,8 @@
 	<class name="RooDoubleCB" />
 	<class name="RooDoubleCrystalBall" />
 	<class name="RooDYShape" />
+	<class name="RooEmpXHistShape" />
+	<class name="RooDYHistShape" />
 	<class name="RooErfExpPdf" />
 	<class name="RooErfPdf" />
 	<class name="RooErfPow2Pdf" />
