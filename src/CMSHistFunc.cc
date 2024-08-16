@@ -607,6 +607,7 @@ void CMSHistFunc::updateCache() const {
       cache_.CopyValues(mcache_[idx].step2);
       if (vtype_ == VerticalSetting::LogQuadLinear) {
         cache_.Exp();
+        cache_.Scale(mcache_[idx].step1.Integral() / mcache_[idx].step2.Integral());
       }
       cache_.CropUnderflows();
       if (enable_fast_vertical_) fast_vertical_ = true;
@@ -713,6 +714,7 @@ void CMSHistFunc::updateMomentFractions(double m) const {
 
     case SineLinear:
       mfrac = TMath::Sin(TMath::PiOver2() * mfrac);
+      [[fallthrough]];
     // now fall through to Linear case
 
     case Linear:

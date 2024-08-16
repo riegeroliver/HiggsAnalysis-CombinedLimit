@@ -385,7 +385,10 @@ RooArgList * CMSHistErrorPropagator::setupBinPars(double poissonThreshold) {
             RooRealVar *var = new RooRealVar(TString::Format("%s_bin%i_%s", this->GetName(), j, proc.c_str()), "", n_p_r, rmin, rmax);
             RooConstVar *cvar = new RooConstVar(TString::Format("%g", 1. / n_p_r), "", 1. / n_p_r);
             RooProduct *prod = new RooProduct(TString::Format("%s_prod", var->GetName()), "", RooArgList(*var, *cvar));
-            var->addOwnedComponents(RooArgSet(*prod, *cvar));
+	    RooArgSet ownedComps;
+	    ownedComps.add(*prod);
+	    ownedComps.add(*cvar);
+            var->addOwnedComponents(ownedComps);
             var->setAttribute("createPoissonConstraint");
             res->addOwned(*var);
             binpars_.add(*prod);
@@ -546,5 +549,42 @@ RooArgList CMSHistErrorPropagator::wrapperList() const {
   return result;
 }
 
+std::map<std::string, Double_t> CMSHistErrorPropagator::getProcessNorms() const {
+
+      std::map<std::string, Double_t> vals_;
+      RooArgList clist(coefList());
+      RooArgList plist(funcList());
+      /*if (plist.getSize() == 1) {
+         CMSHistErrorPropagator *err = dynamic_cast<CMSHistErrorPropagator*>(plist.at(0));
+         if (err) {
+           clist.removeAll();
+           plist.removeAll();
+           clist.add(err->coefList());
+           plist.add(err->wrapperList());
+         }
+      }
+      */
+      for (int i = 0, n = clist.getSize(); i < n; ++i) {
+        RooAbsReal *coeff = (RooAbsReal *) clist.at(i);
+        std::string coeffName = coeff->GetName();
+        RooAbsReal* shape = (RooAbsReal*)plist.at(i);
+        std::unique_ptr<RooArgSet> myobs(shape->getObservables(*x_));
+        TString normProdName = TString::Format("%s", coeff->GetName());
+        RooAbsReal * normProd = nullptr;
+        if (coeff->ownedComponents()) {
+          normProd = dynamic_cast<RooAbsReal*>(coeff->ownedComponents()->find(normProdName));
+        }
+        if (!normProd) {
+          RooAbsReal* integral = shape->createIntegral(*myobs);
+      	  RooArgList normProdInputs;
+      	  normProdInputs.add(*integral);
+      	  normProdInputs.add(*coeff);
+          normProd = new RooProduct(normProdName, "", normProdInputs);
+          normProd->addOwnedComponents(normProdInputs);
+        }
+        vals_[normProdName.Data()] = normProd->getVal();
+      }
+      return vals_;
+}
 #undef HFVERBOSE
 

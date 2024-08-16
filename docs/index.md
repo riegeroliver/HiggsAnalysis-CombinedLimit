@@ -32,7 +32,30 @@ should be sufficient. To choose a release version, you can find the latest
 releases on github under
 [https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit/releases](https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit/releases)
 
-#### Combine v9 - recommended version
+### Combine v10 - recommended version
+
+The nominal installation method is inside CMSSW. The current release targets
+the CMSSW `14_1_X` series because of the recent switch to el9 at lxplus machines.
+
+
+
+```sh
+cmsrel CMSSW_14_1_0_pre4
+cd CMSSW_14_1_0_pre4/src
+cmsenv
+git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+cd HiggsAnalysis/CombinedLimit
+```
+Update to a recommended tag - currently the recommended tag is **v10.0.2**: [see release notes](https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit/releases/tag/v10.0.2)
+
+```sh
+cd $CMSSW_BASE/src/HiggsAnalysis/CombinedLimit
+git fetch origin
+git checkout v10.0.2
+scramv1 b clean; scramv1 b # always make a clean build
+```
+
+### Combine v9 
 
 The nominal installation method is inside CMSSW. The current release targets
 the CMSSW `11_3_X` series because this release has both python2 and python3 ROOT
@@ -135,9 +158,9 @@ make -j 4
 
 You will need to source `env_standalone.sh` each time you want to use the package, or add it to your login environment.
 
-##### Compilation on lxplus9
+##### Compilation of slc7 compatible versions
 
-For slc9 architectures, you will need to do the compilation in an slc7 environment using apptainer. You can then source the standalone script outside of the apptainer.
+For <span style="font-variant:small-caps;">Combine</span> versions before v10 release you will need to do the compilation in an slc7 environment using apptainer. You can then source the standalone script outside of the apptainer.
 On lxplus this can be done as follows:
 
 ```
@@ -239,23 +262,20 @@ See [contributing.md](https://github.com/cms-analysis/HiggsAnalysis-CombinedLimi
 
 ## CombineHarvester/CombineTools
 
-CombineTools is an additional tool for submitting <span style="font-variant:small-caps;">Combine</span> jobs to batch systems or crab, which was originally developed in the context of Higgs to tau tau analyses. Since the repository contains a certain amount of analysis-specific code, the following scripts can be used to clone it with a sparse checkout for just the core [`CombineHarvester/CombineTools`](https://github.com/cms-analysis/CombineHarvester/blob/master/CombineTools/) subpackage, speeding up the checkout and compile times:
+CombineHarvester/CombineTools is a package for the creation of datacards/workspaces used with <span style="font-variant:small-caps;">Combine v10</span> for a number of analyses in CMS. See the [`CombineHarvester`](http://cms-analysis.github.io/CombineHarvester/) documentation pages for more details on using this tool and additional features available in the full package.
 
-git clone via ssh:
-
-```sh
-bash <(curl -s https://raw.githubusercontent.com/cms-analysis/CombineHarvester/main/CombineTools/scripts/sparse-checkout-ssh.sh)
-```
-
-git clone via https:
+This package also comes with useful features for <span style="font-variant:small-caps;">Combine</span> such as the automated datacard validation (see [instructions](docs/part3/validation)). The repository can be checked out and compiled using, 
 
 ```sh
-bash <(curl -s https://raw.githubusercontent.com/cms-analysis/CombineHarvester/main/CombineTools/scripts/sparse-checkout-https.sh)
+git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
+scram b
 ```
 
-make sure to run `scram`  to compile the `CombineTools` package.
+See the [`CombineHarvester`](http://cms-analysis.github.io/CombineHarvester/) documentation for full instructions and reccomended versions. 
 
-See the [`CombineHarvester`](http://cms-analysis.github.io/CombineHarvester/) documentation pages for more details on using this tool and additional features available in the full package.
+!!! info
+    Starting with <span style="font-variant:small-caps;">Combine v10</span>, specific ombineTool functionalities for job submition and parallelization (`combineTool.py`) as well as many plotting functions have been integrated into the <span style="font-variant:small-caps;">Combine</span> package. For these tasks you no longer have to follow the instructions above.
+
 
 ## Citation 
 
