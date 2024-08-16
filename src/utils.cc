@@ -610,7 +610,6 @@ utils::makePlots(const RooAbsPdf &pdf, const RooAbsData &data, const char *signa
 	      if (rebinFactor>1) ds->plotOn(ret.back(), RooFit::DataError(RooAbsData::Poisson));
 	      else ds->plotOn(ret.back(), RooFit::DataError(RooAbsData::Poisson),RooFit::Binning(""));
 	    }
-            delete ds;
         }
         delete datasets;
     } else if (pdf.canBeExtended()) {
@@ -883,6 +882,29 @@ void utils::setModelParameterRanges( const std::string & setPhysicsModelParamete
     }
 
   }
+}
+
+
+void utils::check_inf_parameters(const RooArgSet & params, int verbosity) {
+
+    double infinity_root626 = 1.0e30; 
+    for (RooAbsArg *arg : params) {    
+        RooRealVar *p = dynamic_cast<RooRealVar *>(arg);
+        if (p->getRange().first <= -infinity_root626 || p->getRange().second >= +infinity_root626){
+            
+            if ( verbosity > 2 ) {
+                std::cout << "Found a parameter named "<< p->GetName()
+                          << " infinite in ROOT versions < 6.30, going to update the ranges to take into account the new definition of infinity in ROOT v6.30" << endl;
+            }
+            if (p->getRange().first <= -infinity_root626 && p->getRange().second >= +infinity_root626) {
+              p->removeRange();
+            } else if (p->getRange().second >= +infinity_root626) {
+              p->removeMax();
+            } else {
+              p->removeMin();
+            }
+        }
+    }
 }
 
 void utils::createSnapshotFromString( const std::string expression, const RooArgSet &allvars, RooArgSet &output, const char *context) {

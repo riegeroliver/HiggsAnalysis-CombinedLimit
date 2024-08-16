@@ -585,7 +585,7 @@ You should note that  <span style="font-variant:small-caps;">Combine</span> will
 !!! warning
     This option should not be used with `--expectedFromGrid` if you did not create the grid with the same option. The reason is that the value of the test-statistic that is used to calculate the limit will not be properly calcualted if `--noUpdateGrid` is included. In future versions of the tool, this option will be ignored if using `--expectedFromGrid`. 
 
-The splitting of the jobs can be left to the user's preference. However, users may wish to use the **combineTool** for automating this, as described in the section on [combineTool for job submission](http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/runningthetool/#combinetool-for-job-submission)
+The splitting of the jobs can be left to the user's preference. However, users may wish to use `combineTool.py` for automating this, as described in the section on [combineTool for job submission](http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/runningthetool/#combinetool-for-job-submission)
 
 
 #### Plotting
@@ -656,7 +656,7 @@ The *expected* significance, assuming a signal with **r=X** can be calculated, b
 
 The total number of background toys needs to be large enough to compute the value of the significance, but you need fewer signal toys (especially when you are only computing the median expected significance). For large significances, you can run most of the toys without the `--fullBToys` option, which will be about a factor 2 faster. Only a small part of the toys needs to be run with that option turned on.
 
-As with calculating limits with toys, these jobs can be submitted to the grid or batch systems with the help of the `combineTool`, as described in the section on [combineTool for job submission](http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/runningthetool/#combinetool-for-job-submission)
+As with calculating limits with toys, these jobs can be submitted to the grid or batch systems with the help of the `combineTool.py` script, as described in the section on [combineTool for job submission](http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/runningthetool/#combinetool-for-job-submission)
 
 
 ## Goodness of fit tests
@@ -685,7 +685,7 @@ The following algorithms are implemented:
 
 - **`AD`**: Compute a goodness-of-fit measure for binned fits using the *Anderson-Darling* test. It is based on the integral of the difference between the cumulative distribution function and the empirical distribution function over all bins. It also gives the tail ends of the distribution a higher weighting.
 
-The output tree will contain a branch called **`limit`**, which contains the value of the test statistic in each toy. You can make a histogram of this test statistic $t$. From the distribution that is obtained in this way ($f(t)$) and the single value obtained by running on the observed data ($t_{0}$) you can calculate the p-value $p = \int_{t=t_{0}}^{\mathrm{+inf}} f(t) dt$. Note: in rare cases the test statistic value for the toys can be undefined (for AS and KD). In this case we set the test statistic value to -1. When plotting the test statistic distribution, those toys should be excluded. This is automatically taken care of if you use the GoF collection script in CombineHarvester, which is described below.
+The output tree will contain a branch called **`limit`**, which contains the value of the test statistic in each toy. You can make a histogram of this test statistic $t$. From the distribution that is obtained in this way ($f(t)$) and the single value obtained by running on the observed data ($t_{0}$) you can calculate the p-value $p = \int_{t=t_{0}}^{\mathrm{+inf}} f(t) dt$. Note: in rare cases the test statistic value for the toys can be undefined (for AS and KD). In this case we set the test statistic value to -1. When plotting the test statistic distribution, those toys should be excluded. This is automatically taken care of if you use the GoF collection script which is described below.
 
 When generating toys, the default behavior will be used. See the section on [toy generation](http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/runningthetool/#toy-data-generation) for options that control how nuisance parameters are generated and fitted in these tests. It is recommended to use *frequentist toys* (`--toysFreq`) when running the **`saturated`** model, and the default toys for the other two tests.
 
@@ -763,7 +763,7 @@ where the former gives the result for the S+B model, while the latter gives the 
 
 ### Making a plot of the GoF test statistic distribution
 
-If you have also checked out the [combineTool](http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/#combine-tool), you can use this to run batch jobs or on the grid (see [here](http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/runningthetool/#combinetool-for-job-submission)) and produce a plot of the results. Once the jobs have completed, you can hadd them together and run (e.g for the saturated model),
+You can use the `combineTool.py` script to run batch jobs or on the grid (see [here](http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/runningthetool/#combinetool-for-job-submission)) and produce a plot of the results. Once the jobs have completed, you can hadd them together and run (e.g for the saturated model),
 
 ```sh
 combineTool.py -M CollectGoodnessOfFit --input data_run.root toys_run.root -m 125.0 -o gof.json
@@ -1045,6 +1045,38 @@ combine workspace.root -M HybridNew --LHCmode LHC-feldman-cousins --readHybridRe
 The output tree will contain the values of the POI that crosses the critical value ($\alpha$) - i.e, the boundaries of the confidence intervals.
 
 You can produce a plot of the value of $p_{\vec{\mu}}$ vs the parameter of interest $\vec{\mu}$ by adding the option `--plot <plotname>`.
+
+As an example, we will use the`data/tutorials/multiDim/toy-hgg-125.txt` datacard and find the 1D FC 68% interval for the $r_{qqH}$ parameter. First, we construct the model as, 
+
+```sh
+text2workspace.py -m 125 -P HiggsAnalysis.CombinedLimit.PhysicsModel:floatingXSHiggs --PO modes=ggH,qqH toy-hgg-125.txt -o toy-hgg-125.root
+```
+
+Now we generate the grid of test statistics in a suitable range. You could use the `combineTool.py` as below but for 1D, we can just generate the points in a for loop. 
+
+```sh
+for i in range 0.1 1.1 2.1 3.1 4.1 5.1 6.1 7.1 8.1 9.1 10.1 ; do combine toy-hgg-125.root --redefineSignalPOI r_qqH   -M HybridNew --LHCmode LHC-feldman-cousins --clsAcc 0 --singlePoint r_qqH=${i} --saveToys --saveHybridResult -n ${i} ; done
+
+hadd -f FeldmanCousins1D.root higgsCombine*.1.HybridNew.mH120.123456.root
+```
+
+Next, we get combine to calculate the interval from this grid. 
+```sh
+combine toy-hgg-125.root -M HybridNew --LHCmode LHC-feldman-cousins --readHybridResults --grid=FeldmanCousins1D.root --cl 0.68 --redefineSignalPOI r_qqH
+```
+and we should see the below as the output, 
+
+```
+ -- HybridNew --
+found 68 % confidence regions
+  2.19388 (+/- 0.295316) < r_qqH < 8.01798 (+/- 0.0778685)
+Done in 0.00 min (cpu), 0.00 min (real)
+```
+
+Since we included the `--plot` option, we will also get a plot like the one below, 
+
+![1DFC](images/FC1D.png)
+
 
 #### Extracting 2D contours / general intervals
 
