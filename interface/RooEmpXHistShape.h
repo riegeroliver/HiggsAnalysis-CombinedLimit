@@ -6,12 +6,13 @@
 #include "RooListProxy.h"
 #include "RooAICRegistry.h"
 
+#include "TXMLEngine.h"
 #include "TDOMParser.h"
 #include "TXMLNode.h"
 #include "TXMLAttr.h"
 
 // class RooRealProxy;
-class RooListProxy;
+// class RooListProxy;
 
 class RooEmpXHistShape : public RooAbsPdf {
 

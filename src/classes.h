@@ -48,9 +48,6 @@
 #include "HiggsAnalysis/CombinedLimit/interface/RooParametricShapeBinPdf.h"
 #include "HiggsAnalysis/CombinedLimit/interface/GaussExp.h"
 #include "HiggsAnalysis/CombinedLimit/interface/RooDoubleCBFast.h"
-#include "HiggsAnalysis/CombinedLimit/interface/RooDYShape.h"
-#include "HiggsAnalysis/CombinedLimit/interface/RooEmpXHistShape.h"
-#include "HiggsAnalysis/CombinedLimit/interface/RooDYHistShape.h"
 #include "HiggsAnalysis/CombinedLimit/interface/CMSHistFunc.h"
 #include "HiggsAnalysis/CombinedLimit/interface/CMSHistErrorPropagator.h"
 #include "HiggsAnalysis/CombinedLimit/interface/CMSHistSum.h"
@@ -65,3 +62,7 @@
 #include "HiggsAnalysis/CombinedLimit/interface/CMSExternalMorph.h"
 #include "HiggsAnalysis/CombinedLimit/interface/CMSInterferenceFunc.h"
 #include "HiggsAnalysis/CombinedLimit/interface/RooEFTScalingFunction.h"
+
+#include "HiggsAnalysis/CombinedLimit/interface/RooDYShape.h"
+#include "HiggsAnalysis/CombinedLimit/interface/RooDYHistShape.h"
+#include "HiggsAnalysis/CombinedLimit/interface/RooEmpXHistShape.h"

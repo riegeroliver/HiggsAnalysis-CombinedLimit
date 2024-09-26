@@ -58,6 +58,7 @@ private:
   Double_t bernstein() const ;
   Double_t polynomial() const ;
   Double_t chebychev() const ;
+  Double_t asymptote() const ;
   
   inline static double p1(double t,double a,double b) { return a*t+b; }
   inline static double p2(double t,double a,double b,double c) { return p1(t,p1(t,a,b),c); }

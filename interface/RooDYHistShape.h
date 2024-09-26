@@ -7,7 +7,7 @@
 #include "RooAICRegistry.h"
 
 // class RooRealProxy;
-class RooListProxy;
+// class RooListProxy;
 
 class RooDYHistShape : public RooAbsPdf {
 public:

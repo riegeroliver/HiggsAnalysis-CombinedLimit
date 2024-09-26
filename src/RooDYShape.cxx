@@ -101,6 +101,7 @@ Double_t RooDYShape::evaluate() const
   double poly=0;
   if(_polyType==0) poly=bernstein();
   else if(_polyType==1) poly=chebychev();
+  else if(_polyType==2) poly=asymptote();
   else poly=polynomial();
 
   double add=1;
@@ -116,6 +117,7 @@ Double_t RooDYShape::evaluate() const
     return (add/(pow(arg,p)+pow(0.5*w,p)));   // Simple Breit-Wigner times function
   }
 
+  
   // Physics constants
   double alphaEM=7.297352e-3, Nc=3, Qd=-1./3., Qu=2./3., Qs=-1./3., sin2W=0.23126, GF=1.1663787e-5;
   double gAmu=-0.5, gAu=0.5, gAd=-0.5, gAs=-0.5, gVmu=-0.5+2*sin2W, gVu=0.5-4./3.*sin2W, gVd=-0.5+2./3.*sin2W, gVs=-0.5+2./3.*sin2W;
@@ -266,4 +268,30 @@ Double_t RooDYShape::chebychev() const
     R__ASSERT(false);
   }
   return sum;
+}
+
+Double_t RooDYShape::asymptote() const {
+  const unsigned size = _coefList.getSize();
+  // Check if the number of parameters matches what is expected for the function to work
+  if(size != 3){
+    std::cerr << "In " << __PRETTY_FUNCTION__ << " (" << __FILE__ << ", line " << __LINE__ << "): Asympote only supports three (3) parameters, please check coefficient list! It has " << size << " parameters" << std::endl;
+    R__ASSERT(false);
+  }
+  Double_t a1 = ((RooAbsReal&)_coefList[0]).getVal(); // 1st order contribution
+  Double_t a2 = ((RooAbsReal&)_coefList[1]).getVal(); // 3rd order contribution
+  Double_t a3 = ((RooAbsReal&)_coefList[2]).getVal(); // x-axis offset
+  Double_t num = _x - a3;
+  // Protect against infinity
+  if (abs(num) <= 1e-4){ 
+    // cout << "_x: " << _x << ", a3: " << a3 << ", num: " << num << endl;
+    num = copysign(1e-4, num);
+  }
+  Double_t val = 1 + (a1*a3)/(num) + (a2*pow(a3,3))/pow(num, 3); // asymptotic function
+  if ( _x < 155 && _x > 150){
+    // cout << "val: " << val << ", a1: " << a1 << ", a2: " << a2 << ", a3: " << a3 << ", num: " << num << endl;
+  }
+  // Return a big number if |val| -> infinity (or _x = a3)
+  // if (val > 1e15) {val = 1e15;}
+  // if (val < -1e15) {val = -1e15;}
+  return val;
 }
