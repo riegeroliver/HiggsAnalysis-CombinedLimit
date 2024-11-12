@@ -1057,8 +1057,9 @@ class ModelBuilder(ModelBuilderBase):
             if self.options.noBOnly:
                 break
         discparams = ROOT.RooArgSet("discreteParams")
-        for cpar in self.discrete_param_set:
-            discparams.add(self.out.cat(cpar))
+        if discparams.getSize() > 0:
+            for cpar in self.discrete_param_set:
+                discparams.add(self.out.cat(cpar))
         self.out.safe_import(discparams, discparams.GetName())
         self.out.writeToFile(self.options.out)
 

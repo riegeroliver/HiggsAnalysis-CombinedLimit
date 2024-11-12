@@ -42,7 +42,7 @@
 	<class name="FastHisto2D" />
 	<class name="FastHisto3D" />
 
-	<class name="FastHistoAxis_d" />
+	<!-- <class name="FastHistoAxis_d" />
 	<class name="FastTemplate_d" />
 	<class name="FastHisto_d" />
 	<class name="FastHisto2D_d" />
@@ -62,7 +62,7 @@
 	<class name="FastTemplateFunc_d" />
 	<class name="FastHistoFunc_d" />
 	<class name="FastHisto2DFunc_d" />
-	<class name="FastHisto3DFunc_d" />
+	<class name="FastHisto3DFunc_d" /> -->
 
 	<class name="FastVerticalInterpHistPdf" />
 	<class name="FastVerticalInterpHistPdf2" />
@@ -192,23 +192,23 @@
 	<class name="VerticalInterpPdf" />
 	<class name="GaussExp" />
 	<class name="RooParametricHist" />
-        <class name="RooParametricHist2D" />
+    <class name="RooParametricHist2D" />
 	<class name="RooParametricShapeBinPdf" />
 	<class name="RooMorphingPdf" />
-        <function name="function th1fmorph" />
-  <class name="CMSHistFunc" />
-  <class name="CMSHistErrorPropagator" />
-  <class name="CMSHistSum" />
-  <class name="CMSHistFuncWrapper" />
-  <class name="SimpleTaylorExpansion1D" />
-  <class name="RooTaylorExpansion" />
+    <function name="function th1fmorph" />
+  	<class name="CMSHistFunc" />
+  	<class name="CMSHistErrorPropagator" />
+  	<class name="CMSHistSum" />
+  	<class name="CMSHistFuncWrapper" />
+  	<class name="SimpleTaylorExpansion1D" />
+  	<class name="RooTaylorExpansion" />
 	<class name="RooDoubleCBFast" />
 	<class name="CombDataSetFactory"  transient="true" />
 	<class name="DebugProposal"  transient="true" />
 	<class name="cmsmath::SequentialMinimizer"  transient="true" />
-        <class name="TestProposal"  transient="true" />
-  <class name="RooCheapProduct" />
-  <class name="CMSHggFormulaA1" />
+    <class name="TestProposal"  transient="true" />
+  	<class name="RooCheapProduct" />
+  	<class name="CMSHggFormulaA1" />
   <class name="CMSHggFormulaA2" />
   <class name="CMSHggFormulaB1" />
   <class name="CMSHggFormulaB2" />
