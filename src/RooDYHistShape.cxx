@@ -129,7 +129,7 @@ Double_t RooDYHistShape::bernstein(Double_t x_) const {
   } else if(degree == 1) {
  
     Double_t a0 = ((RooAbsReal *)iter.next())->getVal(); // c0
-    Double_t a1 = ((RooAbsReal *)iter.next())->getVal() - a0; // c1 - c0
+    Double_t a1 = ((RooAbsReal *)iter.next())->getVal(); // c1 - c0 *** R E M O V E D  C O R R E L A T I O N ***
     return a1 * x_norm + a0;
  
   } else if(degree == 2) {
